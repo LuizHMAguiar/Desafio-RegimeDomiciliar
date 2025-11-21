@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Login } from './components/Login';
 import { CoordinatorDashboard } from './components/CoordinatorDashboard';
 import { TeacherDashboard } from './components/TeacherDashboard';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 import { type User, type Student, type Material } from './types';
+import { ProtectedRoute } from './routes/ProtectedRoute';
 
 function App() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -91,19 +94,25 @@ function App() {
   const handleLogin = (email: string, password: string) => {
     // Simulação de login
     if (email === 'coordenador@escola.com' && password === 'coord123') {
-      setUser({
+      const newUser = {
         id: 'coord1',
         name: 'Maria Coordenadora',
         email: email,
-        role: 'coordinator',
-      });
+        role: 'coordinator' as const,
+      };
+      setUser(newUser);
+      navigate('/coordinator');
+      return;
     } else if (email === 'professor@escola.com' && password === 'prof123') {
-      setUser({
+      const newUser = {
         id: 'teacher1',
         name: 'Prof. João Silva',
         email: email,
-        role: 'teacher',
-      });
+        role: 'teacher' as const,
+      };
+      setUser(newUser);
+      navigate('/teacher');
+      return;
     } else {
       throw new Error('Credenciais inválidas');
     }
@@ -111,6 +120,7 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    navigate('/login', { replace: true });
   };
 
   const handleAddStudent = (student: Omit<Student, 'id' | 'registeredAt'>) => {
@@ -153,35 +163,50 @@ function App() {
     toast.success('Registro removido com sucesso!');
   };
 
-  if (!user) {
-    return <Login onLogin={handleLogin} />;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {user.role === 'coordinator' ? (
-        <CoordinatorDashboard
-          user={user}
-          students={students}
-          materials={materials}
-          onLogout={handleLogout}
-          onAddStudent={handleAddStudent}
-          onUpdateStudent={handleUpdateStudent}
-          onDeleteStudent={handleDeleteStudent}
+    <>
+      <Routes>
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        <Route
+          path="/coordinator"
+          element={
+            <ProtectedRoute user={user} allowedRoles={[ 'coordinator' ]}>
+              <CoordinatorDashboard
+                user={user!}
+                students={students}
+                materials={materials}
+                onLogout={handleLogout}
+                onAddStudent={handleAddStudent}
+                onUpdateStudent={handleUpdateStudent}
+                onDeleteStudent={handleDeleteStudent}
+              />
+            </ProtectedRoute>
+          }
         />
-      ) : (
-        <TeacherDashboard
-          user={user}
-          students={students}
-          materials={materials}
-          onLogout={handleLogout}
-          onAddMaterial={handleAddMaterial}
-          onUpdateMaterial={handleUpdateMaterial}
-          onDeleteMaterial={handleDeleteMaterial}
+
+        <Route
+          path="/teacher"
+          element={
+            <ProtectedRoute user={user} allowedRoles={[ 'teacher' ]}>
+              <TeacherDashboard
+                user={user!}
+                students={students}
+                materials={materials}
+                onLogout={handleLogout}
+                onAddMaterial={handleAddMaterial}
+                onUpdateMaterial={handleUpdateMaterial}
+                onDeleteMaterial={handleDeleteMaterial}
+              />
+            </ProtectedRoute>
+          }
         />
-      )}
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
       <Toaster position="top-right" />
-    </div>
+    </>
   );
 }
 

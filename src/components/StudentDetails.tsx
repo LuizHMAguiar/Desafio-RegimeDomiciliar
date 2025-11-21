@@ -3,9 +3,10 @@ import { type Student, type Material } from '../types';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Calendar, FileText, Link as LinkIcon, Download, Edit, Trash2, Printer } from 'lucide-react';
+import { Calendar, FileText, Link as LinkIcon, Download, Edit, Trash2, Printer, Search } from 'lucide-react';
+import { Input } from './ui/input';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,6 +38,7 @@ export function StudentDetails({
 }: StudentDetailsProps) {
   const [subjectFilter, setSubjectFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'material' | 'activity'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
   const [materialToDelete, setMaterialToDelete] = useState<Material | null>(null);
   const [showReport, setShowReport] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,11 @@ export function StudentDetails({
     .filter(m => {
       const matchesSubject = subjectFilter === 'all' || m.subject === subjectFilter;
       const matchesType = typeFilter === 'all' || m.type === typeFilter;
-      return matchesSubject && matchesType;
+      const matchesSearch = 
+        m.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.teacherName.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesSubject && matchesType && matchesSearch;
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
@@ -76,11 +82,6 @@ export function StudentDetails({
     setTimeout(() => {
       window.print();
     }, 100);
-  };
-
-  const materialsByType = {
-    materials: materials.filter(m => m.type === 'material'),
-    activities: materials.filter(m => m.type === 'activity'),
   };
 
   return (
@@ -113,33 +114,45 @@ export function StudentDetails({
         <Card className="mt-4">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Materiais e Atividades ({materials.length})</CardTitle>
+              <CardTitle>Materiais e Atividades ({filteredMaterials.length})</CardTitle>
             </div>
 
-            <div className="flex gap-3 mt-4">
-              <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Filtrar por disciplina" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas as disciplinas</SelectItem>
-                  {subjects.map(subject => (
-                    <SelectItem key={subject} value={subject}>{subject}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="space-y-3 mt-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                <Input
+                  placeholder="Buscar por disciplina, professor ou conteúdo..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
 
-              <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)} className="flex-1">
-                <TabsList>
-                  <TabsTrigger value="all">Todos ({materials.length})</TabsTrigger>
-                  <TabsTrigger value="material">
-                    Materiais ({materialsByType.materials.length})
-                  </TabsTrigger>
-                  <TabsTrigger value="activity">
-                    Atividades ({materialsByType.activities.length})
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <div className="flex gap-3">
+                <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Filtrar por disciplina" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as disciplinas</SelectItem>
+                    {subjects.map(subject => (
+                      <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)} className="flex-1">
+                  <TabsList>
+                    <TabsTrigger value="all">Todos ({filteredMaterials.length})</TabsTrigger>
+                    <TabsTrigger value="material">
+                      Materiais ({filteredMaterials.filter(m => m.type === 'material').length})
+                    </TabsTrigger>
+                    <TabsTrigger value="activity">
+                      Atividades ({filteredMaterials.filter(m => m.type === 'activity').length})
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
             </div>
           </CardHeader>
 

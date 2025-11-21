@@ -1,0 +1,385 @@
+{
+  "projectInfo": {
+    "name": "desafio-regimedomiciliar",
+    "version": "0.0.0",
+    "type": "module",
+    "framework": "React 19",
+    "language": "TypeScript 5.9+",
+    "bundler": "Vite 7",
+    "branch": "Jhon",
+    "auditDate": "2025-11-21"
+  },
+  "statistics": {
+    "directDependencies": 25,
+    "totalPackages": 161,
+    "vulnerabilities": 0,
+    "outdatedPackages": 0,
+    "redundantDependencies": 2
+  },
+  "productionDependencies": {
+    "total": 13,
+    "packages": [
+      {
+        "name": "react",
+        "version": "^19.2.0",
+        "category": "framework",
+        "purpose": "React framework",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "react-dom",
+        "version": "^19.2.0",
+        "category": "framework",
+        "purpose": "React DOM rendering",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "@radix-ui/react-alert-dialog",
+        "version": "^1.1.15",
+        "category": "ui",
+        "purpose": "Alert dialog component",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@radix-ui/react-dialog",
+        "version": "^1.1.15",
+        "category": "ui",
+        "purpose": "Modal dialog component",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@radix-ui/react-label",
+        "version": "^2.1.8",
+        "category": "ui",
+        "purpose": "Label component",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@radix-ui/react-progress",
+        "version": "^1.1.8",
+        "category": "ui",
+        "purpose": "Progress bar component",
+        "status": "installed",
+        "critical": false,
+        "newlyAdded": true,
+        "addedFor": "File upload progress visualization"
+      },
+      {
+        "name": "@radix-ui/react-radio-group",
+        "version": "^1.3.8",
+        "category": "ui",
+        "purpose": "Radio group component",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@radix-ui/react-select",
+        "version": "^2.2.6",
+        "category": "ui",
+        "purpose": "Custom select component",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@radix-ui/react-slot",
+        "version": "^1.1.2",
+        "category": "ui",
+        "purpose": "Slot composition primitive",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@radix-ui/react-tabs",
+        "version": "^1.1.13",
+        "category": "ui",
+        "purpose": "Tabs component",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "class-variance-authority",
+        "version": "^0.7.1",
+        "category": "styling",
+        "purpose": "CSS class variants",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "clsx",
+        "version": "^2.1.1",
+        "category": "styling",
+        "purpose": "className utility",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "tailwind-merge",
+        "version": "^3.4.0",
+        "category": "styling",
+        "purpose": "Merge Tailwind classes",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "lucide-react",
+        "version": "^0.554.0",
+        "category": "icons",
+        "purpose": "SVG icons",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "sonner",
+        "version": "^2.0.7",
+        "category": "notifications",
+        "purpose": "Toast notifications",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "next-themes",
+        "version": "^0.4.6",
+        "category": "theming",
+        "purpose": "Theme management (light/dark)",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "react-radio-group",
+        "version": "^3.0.3",
+        "category": "ui",
+        "purpose": "Additional radio group",
+        "status": "installed",
+        "critical": false,
+        "note": "Redundant with @radix-ui/react-radio-group"
+      },
+      {
+        "name": "react-tabs",
+        "version": "^6.1.0",
+        "category": "ui",
+        "purpose": "Additional tabs component",
+        "status": "installed",
+        "critical": false,
+        "note": "Redundant with @radix-ui/react-tabs"
+      }
+    ]
+  },
+  "devDependencies": {
+    "total": 12,
+    "packages": [
+      {
+        "name": "typescript",
+        "version": "~5.9.3",
+        "category": "language",
+        "purpose": "TypeScript compiler",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "@types/react",
+        "version": "^19.2.2",
+        "category": "types",
+        "purpose": "React type definitions",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "@types/react-dom",
+        "version": "^19.2.2",
+        "category": "types",
+        "purpose": "React DOM type definitions",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "@types/node",
+        "version": "^24.10.0",
+        "category": "types",
+        "purpose": "Node.js type definitions",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "vite",
+        "version": "^7.2.2",
+        "category": "build",
+        "purpose": "Build tool",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "@vitejs/plugin-react",
+        "version": "^5.1.0",
+        "category": "build",
+        "purpose": "Vite React plugin",
+        "status": "installed",
+        "critical": true
+      },
+      {
+        "name": "eslint",
+        "version": "^9.39.1",
+        "category": "linting",
+        "purpose": "JavaScript linter",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "@eslint/js",
+        "version": "^9.39.1",
+        "category": "linting",
+        "purpose": "ESLint recommended config",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "eslint-plugin-react-hooks",
+        "version": "^7.0.1",
+        "category": "linting",
+        "purpose": "ESLint React Hooks rules",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "eslint-plugin-react-refresh",
+        "version": "^0.4.24",
+        "category": "linting",
+        "purpose": "ESLint Fast Refresh support",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "typescript-eslint",
+        "version": "^8.46.3",
+        "category": "linting",
+        "purpose": "ESLint TypeScript support",
+        "status": "installed",
+        "critical": false
+      },
+      {
+        "name": "globals",
+        "version": "^16.5.0",
+        "category": "linting",
+        "purpose": "Global variables for ESLint",
+        "status": "installed",
+        "critical": false
+      }
+    ]
+  },
+  "radixUiPrimitives": {
+    "count": 17,
+    "packages": [
+      "@radix-ui/primitive",
+      "@radix-ui/react-compose-refs",
+      "@radix-ui/react-context",
+      "@radix-ui/react-dismissable-layer",
+      "@radix-ui/react-focus-guards",
+      "@radix-ui/react-focus-scope",
+      "@radix-ui/react-id",
+      "@radix-ui/react-portal",
+      "@radix-ui/react-presence",
+      "@radix-ui/react-primitive",
+      "@radix-ui/react-use-callback-ref",
+      "@radix-ui/react-use-controllable-state",
+      "@radix-ui/react-use-escape-keydown",
+      "@radix-ui/react-use-layout-effect",
+      "@radix-ui/react-roving-focus",
+      "@radix-ui/react-collection",
+      "@radix-ui/react-direction"
+    ],
+    "note": "Automatically installed as dependencies of Radix UI components"
+  },
+  "utilities": {
+    "count": 8,
+    "packages": [
+      {
+        "name": "aria-hidden",
+        "purpose": "Accessibility - hide elements from screen readers"
+      },
+      {
+        "name": "react-remove-scroll",
+        "purpose": "Control scroll in modals"
+      },
+      {
+        "name": "react-style-singleton",
+        "purpose": "Manage unique styles"
+      },
+      {
+        "name": "use-callback-ref",
+        "purpose": "Utility hooks"
+      },
+      {
+        "name": "use-sidecar",
+        "purpose": "Sidecar pattern for hooks"
+      },
+      {
+        "name": "get-nonce",
+        "purpose": "Generate CSP nonces"
+      },
+      {
+        "name": "detect-node-es",
+        "purpose": "Environment detection"
+      },
+      {
+        "name": "tslib",
+        "purpose": "TypeScript runtime library"
+      }
+    ]
+  },
+  "recommendations": {
+    "immediate": [
+      {
+        "priority": "high",
+        "action": "Remove redundant dependency",
+        "details": "Remove 'react-tabs' in favor of '@radix-ui/react-tabs'",
+        "impact": "Reduce bundle size, simplify maintenance"
+      },
+      {
+        "priority": "high",
+        "action": "Remove redundant dependency",
+        "details": "Remove 'react-radio-group' in favor of '@radix-ui/react-radio-group'",
+        "impact": "Reduce bundle size, simplify maintenance"
+      }
+    ],
+    "shortTerm": [
+      {
+        "priority": "medium",
+        "action": "Configure Supabase correctly",
+        "details": "Set up Deno runtime and environment variables for edge functions",
+        "impact": "Enable serverless functionality"
+      },
+      {
+        "priority": "medium",
+        "action": "Add missing Radix UI components",
+        "details": "Consider @radix-ui/react-badges, @radix-ui/react-toast if needed",
+        "impact": "Reduce custom implementations"
+      }
+    ],
+    "mediumTerm": [
+      {
+        "priority": "low",
+        "action": "Analyze bundle size",
+        "details": "Add vite-plugin-visualizer for bundle analysis",
+        "impact": "Identify optimization opportunities"
+      },
+      {
+        "priority": "low",
+        "action": "Add testing framework",
+        "details": "Install Vitest + React Testing Library",
+        "impact": "Improve code quality and confidence"
+      }
+    ]
+  },
+  "auditResult": {
+    "vulnerabilities": 0,
+    "outdated": 0,
+    "licenseIssues": 0,
+    "overallRating": "A+",
+    "status": "healthy",
+    "message": "Project has a solid and modern foundation with well-maintained dependencies."
+  }
+}

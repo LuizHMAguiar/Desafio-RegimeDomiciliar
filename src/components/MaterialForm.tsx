@@ -6,8 +6,9 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Alert, AlertDescription } from './ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { AlertCircle, Link as LinkIcon, FileText, Plus, X } from 'lucide-react';
+import { AlertCircle, Link as LinkIcon, FileText, Plus, X, CheckCircle, AlertTriangle } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Progress } from './ui/progress';
 
 interface MaterialFormProps {
   material?: Material | null;
@@ -26,8 +27,13 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
     description: '',
     links: [''],
   });
-  const [files, setFiles] = useState<{ name: string; url: string }[]>([]);
+  const [files, setFiles] = useState<{ name: string; url: string; size: number }[]>([]);
+  const [fileError, setFileError] = useState('');
   const [error, setError] = useState('');
+  const [uploadProgress, setUploadProgress] = useState<Record<number, number>>({});
+
+  // Limite de 10MB por arquivo
+  const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
   useEffect(() => {
     if (material) {
@@ -38,7 +44,7 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
         description: material.description,
         links: material.links && material.links.length > 0 ? material.links : [''],
       });
-      setFiles(material.files || []);
+      setFiles(material.files?.map(f => ({ ...f, size: 0 })) || []);
     } else if (student) {
       setFormData(prev => ({ ...prev, studentId: student.id }));
     }
@@ -67,13 +73,54 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError('');
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files).map(file => ({
-        name: file.name,
-        url: URL.createObjectURL(file),
-      }));
-      setFiles(prev => [...prev, ...newFiles]);
+      const fileArray = Array.from(e.target.files);
+      const validFiles: { name: string; url: string; size: number }[] = [];
+      let hasErrors = false;
+
+      fileArray.forEach((file, index) => {
+        // Validar tamanho do arquivo
+        if (file.size > MAX_FILE_SIZE) {
+          setFileError(`Arquivo "${file.name}" excede o tamanho máximo de 10MB`);
+          hasErrors = true;
+          return;
+        }
+
+        // Simular progresso do upload
+        setUploadProgress(prev => ({ ...prev, [files.length + index]: 0 }));
+        
+        // Simular carregamento progressivo
+        const progressInterval = setInterval(() => {
+          setUploadProgress(prev => {
+            const current = prev[files.length + index] || 0;
+            if (current >= 100) {
+              clearInterval(progressInterval);
+              return prev;
+            }
+            return { ...prev, [files.length + index]: current + Math.random() * 30 };
+          });
+        }, 100);
+
+        validFiles.push({
+          name: file.name,
+          url: URL.createObjectURL(file),
+          size: file.size,
+        });
+      });
+
+      if (!hasErrors) {
+        setFiles(prev => [...prev, ...validFiles]);
+      }
     }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
   const removeFile = (index: number) => {
@@ -138,6 +185,13 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
         <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+      
+      {fileError && (
+        <Alert variant="destructive">
+          <AlertTriangle className="size-4" />
+          <AlertDescription>{fileError}</AlertDescription>
         </Alert>
       )}
 
@@ -210,29 +264,51 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
 
       {formData.type === 'material' && (
         <div className="space-y-2">
-          <Label htmlFor="files">Arquivos (opcional para materiais)</Label>
+          <Label htmlFor="files">Arquivos (opcional para materiais) - Máx. 10MB por arquivo</Label>
           <Input
             id="files"
             type="file"
             onChange={handleFileChange}
             multiple
-            accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip"
+            accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip,.xlsx,.xls,.jpg,.jpeg,.png"
           />
           {files.length > 0 && (
             <div className="space-y-2 mt-2">
-              {files.map((file, index) => (
-                <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded border">
-                  <span className="text-sm truncate flex-1">{file.name}</span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeFile(index)}
-                  >
-                    <X className="size-4" />
-                  </Button>
-                </div>
-              ))}
+              {files.map((file, index) => {
+                const progress = uploadProgress[index] || 100;
+                return (
+                  <div key={index} className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <FileText className="size-4 text-blue-600 flex-shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm truncate text-gray-900">{file.name}</p>
+                          <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                        </div>
+                      </div>
+                      {progress >= 100 ? (
+                        <CheckCircle className="size-4 text-green-600 flex-shrink-0" />
+                      ) : null}
+                    </div>
+                    {progress < 100 && (
+                      <div className="mb-2">
+                        <Progress value={progress} className="h-2" />
+                        <p className="text-xs text-gray-500 mt-1">{Math.round(progress)}%</p>
+                      </div>
+                    )}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeFile(index)}
+                      className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <X className="size-4 mr-2" />
+                      Remover
+                    </Button>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
