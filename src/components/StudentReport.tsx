@@ -1,4 +1,4 @@
-import { Student, Material } from '../App';
+import { type Student, type Material } from '../types';
 import { Calendar, FileText, Link as LinkIcon } from 'lucide-react';
 
 interface StudentReportProps {

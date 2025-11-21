@@ -1,4 +1,4 @@
-import { User } from '../App';
+import type { User } from '../types';
 import { Button } from './ui/button';
 import { GraduationCap, LogOut, User as UserIcon } from 'lucide-react';
 import { Badge } from './ui/badge';

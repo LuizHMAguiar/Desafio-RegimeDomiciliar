@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Material, Student, User } from '../App';
+import { type Material, type Student, type User } from '../types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';

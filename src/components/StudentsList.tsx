@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Student } from '../App';
+import type { Student } from '../types'; // ✅ certo
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';

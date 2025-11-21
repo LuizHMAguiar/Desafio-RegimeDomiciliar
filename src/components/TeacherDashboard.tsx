@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { User, Student, Material } from '../App';
+import type { User, Student, Material } from '../types';
 import { Header } from './Header';
 import { StudentsList } from './StudentsList';
 import { StudentDetails } from './StudentDetails';

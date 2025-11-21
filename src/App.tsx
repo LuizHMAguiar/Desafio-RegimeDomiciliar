@@ -4,7 +4,7 @@ import { CoordinatorDashboard } from './components/CoordinatorDashboard';
 import { TeacherDashboard } from './components/TeacherDashboard';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
-import { User, Student, Material } from './types';
+import { type User, type Student, type Material } from './types';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
