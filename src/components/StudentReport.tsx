@@ -76,7 +76,7 @@ export function StudentReport({ student, materials }: StudentReportProps) {
               <p>{student.class}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Período:</p>
+              <p className="text-sm text-gray-600">Semestre:</p>
               <p>{formatDate(student.startDate)} até {formatDate(student.endDate)}</p>
             </div>
           </div>

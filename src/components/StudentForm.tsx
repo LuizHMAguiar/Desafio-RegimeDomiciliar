@@ -74,7 +74,7 @@ export function StudentForm({ student, userId, onSubmit, onCancel }: StudentForm
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays < 15) {
-      setError('O período de regime domiciliar deve ser de no mínimo 15 dias');
+      setError('O semestre de regime domiciliar deve ser de no mínimo 15 dias');
       return false;
     }
 
@@ -130,7 +130,7 @@ export function StudentForm({ student, userId, onSubmit, onCancel }: StudentForm
             id="class"
             value={formData.class}
             onChange={(e) => handleChange('class', e.target.value)}
-            placeholder="Ex: 3º Período"
+            placeholder="Ex: 3º Semestre"
           />
         </div>
       </div>

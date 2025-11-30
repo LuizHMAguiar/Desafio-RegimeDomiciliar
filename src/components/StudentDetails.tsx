@@ -117,7 +117,7 @@ export function StudentDetails({
               <CardTitle>Materiais e Atividades ({filteredMaterials.length})</CardTitle>
             </div>
 
-            <div className="space-y-3 mt-4">
+            <div className="space-y-4 mt-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
                 <Input
@@ -128,7 +128,7 @@ export function StudentDetails({
                 />
               </div>
 
-              <div className="flex gap-3">
+              <div className="flex gap-4">
                 <Select value={subjectFilter} onValueChange={setSubjectFilter}>
                   <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="Filtrar por disciplina" />
