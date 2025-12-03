@@ -8,8 +8,20 @@ interface Props {
   children: React.ReactElement;
 }
 
+/**
+ * ProtectedRoute: protege rotas com base em autenticação e papéis.
+ * - se não autenticado -> redireciona para `/login`
+ * - se autenticado mas não autorizado -> redireciona para dashboard do próprio papel
+ */
 export function ProtectedRoute({ user, allowedRoles = [], children }: Props) {
-  if (!user) return <Navigate to="/" replace />;
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) return <Navigate to="/" replace />;
+  if (!user) return <Navigate to="/login" replace />;
+
+  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+    // redireciona para dashboard apropriado
+    if (user.role === 'teacher') return <Navigate to="/teacher" replace />;
+    if (user.role === 'coordinator') return <Navigate to="/coordinator" replace />;
+    return <Navigate to="/login" replace />;
+  }
+
   return children;
 }

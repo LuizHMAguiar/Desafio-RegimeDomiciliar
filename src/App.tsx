@@ -3,6 +3,11 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Login } from './components/Login';
 import { CoordinatorDashboard } from './components/CoordinatorDashboard';
 import { TeacherDashboard } from './components/TeacherDashboard';
+import ProfilesPage from './pages/Profiles';
+import TeacherProfilePage from './pages/TeacherProfile';
+import InternalLayout from './components/InternalLayout';
+import { useAppStore } from './stores/useAppStore';
+import { validateProfile } from './api/profiles';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 import { type User, type Student, type Material } from './types';
@@ -11,6 +16,7 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 function App() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const setGlobalUser = useAppStore((s: any) => s.setUser);
   const [students, setStudents] = useState<Student[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
 
@@ -92,7 +98,7 @@ function App() {
   }, []);
 
   const handleLogin = (email: string, password: string) => {
-    // Simulação de login
+    // Credenciais padrão: coordenador
     if (email === 'coordenador@escola.com' && password === 'coord123') {
       const newUser = {
         id: 'coord1',
@@ -101,9 +107,13 @@ function App() {
         role: 'coordinator' as const,
       };
       setUser(newUser);
+      setGlobalUser(newUser as any);
       navigate('/coordinator');
       return;
-    } else if (email === 'professor@escola.com' && password === 'prof123') {
+    }
+
+    // Credenciais padrão: professor
+    if (email === 'professor@escola.com' && password === 'prof123') {
       const newUser = {
         id: 'teacher1',
         name: 'Prof. João Silva',
@@ -111,15 +121,40 @@ function App() {
         role: 'teacher' as const,
       };
       setUser(newUser);
+      setGlobalUser(newUser as any);
       navigate('/teacher');
       return;
-    } else {
-      throw new Error('Credenciais inválidas');
     }
+
+    // Verificar perfis cadastrados
+    validateProfile(email, password).then((profile) => {
+      if (profile) {
+        const newUser: User = {
+          id: profile.id,
+          name: profile.name,
+          email: profile.email,
+          role: profile.role as 'teacher' | 'coordinator',
+        };
+        setUser(newUser);
+        setGlobalUser(newUser as any);
+
+        if (profile.role === 'coordinator') {
+          navigate('/coordinator');
+        } else {
+          navigate('/teacher');
+        }
+        return;
+      }
+
+      throw new Error('Credenciais inválidas');
+    }).catch(() => {
+      throw new Error('Credenciais inválidas');
+    });
   };
 
   const handleLogout = () => {
     setUser(null);
+    setGlobalUser(null as any);
     navigate('/login', { replace: true });
   };
 
@@ -173,15 +208,17 @@ function App() {
           path="/coordinator"
           element={
             <ProtectedRoute user={user} allowedRoles={[ 'coordinator' ]}>
-              <CoordinatorDashboard
-                user={user!}
-                students={students}
-                materials={materials}
-                onLogout={handleLogout}
-                onAddStudent={handleAddStudent}
-                onUpdateStudent={handleUpdateStudent}
-                onDeleteStudent={handleDeleteStudent}
-              />
+              <InternalLayout>
+                <CoordinatorDashboard
+                  user={user!}
+                  students={students}
+                  materials={materials}
+                  onLogout={handleLogout}
+                  onAddStudent={handleAddStudent}
+                  onUpdateStudent={handleUpdateStudent}
+                  onDeleteStudent={handleDeleteStudent}
+                />
+              </InternalLayout>
             </ProtectedRoute>
           }
         />
@@ -190,20 +227,42 @@ function App() {
           path="/teacher"
           element={
             <ProtectedRoute user={user} allowedRoles={[ 'teacher' ]}>
-              <TeacherDashboard
-                user={user!}
-                students={students}
-                materials={materials}
-                onLogout={handleLogout}
-                onAddMaterial={handleAddMaterial}
-                onUpdateMaterial={handleUpdateMaterial}
-                onDeleteMaterial={handleDeleteMaterial}
-              />
+              <InternalLayout>
+                <TeacherDashboard
+                  user={user!}
+                  students={students}
+                  materials={materials}
+                  onLogout={handleLogout}
+                  onAddMaterial={handleAddMaterial}
+                  onUpdateMaterial={handleUpdateMaterial}
+                  onDeleteMaterial={handleDeleteMaterial}
+                />
+              </InternalLayout>
             </ProtectedRoute>
           }
         />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/perfis"
+          element={
+            <ProtectedRoute user={user} allowedRoles={[ 'coordinator' ]}>
+              <InternalLayout>
+                <ProfilesPage />
+              </InternalLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/perfil"
+          element={
+            <ProtectedRoute user={user} allowedRoles={[ 'teacher' ]}>
+              <InternalLayout>
+                <TeacherProfilePage />
+              </InternalLayout>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <Toaster position="top-right" />
     </>
