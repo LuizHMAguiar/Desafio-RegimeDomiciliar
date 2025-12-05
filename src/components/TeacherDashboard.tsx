@@ -72,29 +72,17 @@ export function TeacherDashboard({
               Adicione materiais e atividades para os estudantes
             </p>
           </div>
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={handleOpenAddMaterial} disabled={!selectedStudent}>
-                <Plus className="size-4 mr-2" />
-                Adicionar Material/Atividade
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingMaterial ? 'Editar Registro' : 'Adicionar Material ou Atividade'}
-                </DialogTitle>
-              </DialogHeader>
-              <MaterialForm
-                material={editingMaterial}
-                student={selectedStudent}
-                students={students}
-                user={user}
-                onSubmit={editingMaterial ? handleUpdateMaterial : handleAddMaterial}
-                onCancel={handleCloseForm}
-              />
-            </DialogContent>
-          </Dialog>
+          <div>
+            <Button
+              onClick={handleOpenAddMaterial}
+              disabled={!selectedStudent}
+              title={!selectedStudent ? 'Selecione um estudante para ativar' : 'Adicionar material/atividade'}
+              className="inline-flex"
+            >
+              <Plus className="size-4 mr-2" />
+              Adicionar Material/Atividade
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -127,6 +115,34 @@ export function TeacherDashboard({
           </div>
         </div>
       </div>
+
+      {/* Floating action button for adding materials (bottom-right) */}
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogTrigger asChild>
+            <div className="fixed bottom-6 right-6 z-50">
+            <Button aria-label="Adicionar Material ou Atividade" onClick={handleOpenAddMaterial} className="rounded-full px-4 py-3 shadow-xl flex items-center gap-2" disabled={!selectedStudent} title={!selectedStudent ? 'Selecione um estudante para ativar' : 'Adicionar material/atividade'}>
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">Adicionar Material/Atividade</span>
+            </Button>
+          </div>
+        </DialogTrigger>
+
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingMaterial ? 'Editar Registro' : 'Adicionar Material ou Atividade'}
+            </DialogTitle>
+          </DialogHeader>
+          <MaterialForm
+            material={editingMaterial}
+            student={selectedStudent}
+            students={students}
+            user={user}
+            onSubmit={editingMaterial ? handleUpdateMaterial : handleAddMaterial}
+            onCancel={handleCloseForm}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

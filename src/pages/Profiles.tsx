@@ -144,11 +144,11 @@ export default function ProfilesPage() {
   const [editing, setEditing] = useState<any>(null);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
             <button
               onClick={() => navigate('/coordinator')}
               className="text-gray-600 hover:text-gray-900 transition-colors"
@@ -156,7 +156,7 @@ export default function ProfilesPage() {
               <ArrowLeft className="size-5" />
             </button>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Gerenciar Perfis</h1>
+              <h1 className="text-3xl font-bold text-foreground">Gerenciar Perfis</h1>
               <p className="text-gray-500 mt-1">Crie e edite perfis de usuários (coordenadores e professores)</p>
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function ProfilesPage() {
                       <tbody>
                         {(profiles as any[]).map((p: any) => (
                           <tr key={p.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                            <td className="py-3 px-4 font-medium text-gray-900">{p.name}</td>
+                            <td className="py-3 px-4 font-medium text-foreground">{p.name}</td>
                             <td className="py-3 px-4 text-gray-600 text-sm">{p.email}</td>
                             <td className="py-3 px-4">
                               <Badge className={p.role === 'coordinator' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}>

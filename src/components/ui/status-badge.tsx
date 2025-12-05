@@ -13,17 +13,26 @@ interface StatusBadgeProps {
 export function StatusBadge({ status, className = '' }: StatusBadgeProps) {
   let label = 'Ativo';
   let extraClass = 'bg-green-100 text-green-800 border-transparent';
+  let customStyle: React.CSSProperties = {};
 
   if (status === 'encerrando') {
     label = 'Próximo de encerrar';
     extraClass = 'bg-yellow-100 text-yellow-800 border-transparent';
   } else if (status === 'encerrado') {
     label = 'Encerrado';
-    extraClass = 'bg-red-100 text-red-800 border-transparent';
+    extraClass = 'border-transparent';
+    customStyle = { 
+      backgroundColor: '#ef4444', 
+      color: '#ffffff',
+      fontWeight: '600'
+    };
   }
 
   return (
-    <Badge className={`${extraClass} ${className}`.trim()}>
+    <Badge 
+      className={`${extraClass} ${className}`.trim()}
+      style={customStyle}
+    >
       {label}
     </Badge>
   );

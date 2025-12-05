@@ -15,7 +15,7 @@ export default function TeacherProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="max-w-2xl mx-auto px-6 py-8">
         <button
           onClick={() => navigate('/teacher')}

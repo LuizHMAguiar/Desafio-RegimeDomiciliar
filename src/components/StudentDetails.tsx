@@ -88,27 +88,32 @@ export function StudentDetails({
     <>
       <div className="print:hidden">
         <Card>
-          <CardHeader>
-            <div className="flex items-start justify-between">
-              <div>
-                <CardTitle>{student.name}</CardTitle>
-                <div className="space-y-1 mt-2">
-                  <p className="text-sm text-gray-600">{student.course}</p>
-                  <p className="text-sm text-gray-600">{student.class}</p>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
-                    <Calendar className="size-4" />
-                    <span>
-                      {formatDate(student.startDate)} até {formatDate(student.endDate)}
-                    </span>
-                  </div>
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className="w-14 h-14 rounded-xl bg-accent flex items-center justify-center text-accent-foreground font-semibold text-lg shadow-sm">
+                {student.name.split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase()}
+              </div>
+              <div className="min-w-0">
+                <CardTitle className="text-foreground font-bold text-xl sm:text-2xl truncate">{student.name}</CardTitle>
+                <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground flex-wrap">
+                  <span>{student.course}</span>
+                  <span className="opacity-50">•</span>
+                  <span>{student.class}</span>
+                  <span className="opacity-50">•</span>
+                  <span className="flex items-center gap-2"><Calendar className="size-4" />{formatDate(student.startDate)} — {formatDate(student.endDate)}</span>
                 </div>
               </div>
-              <Button onClick={handlePrintReport} variant="outline">
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button onClick={handlePrintReport} variant="outline" className="shadow-sm">
                 <Printer className="size-4 mr-2" />
                 Imprimir Relatório
               </Button>
             </div>
-          </CardHeader>
+          </div>
+        </CardHeader>
         </Card>
 
         <Card className="mt-4">
@@ -168,7 +173,7 @@ export function StudentDetails({
                 {filteredMaterials.map(material => (
                   <div
                     key={material.id}
-                    className="internal-panel rounded-lg p-4 transition-shadow"
+                    className="internal-panel rounded-lg p-4 transition-shadow hover:shadow-md bg-color-card"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start gap-3 flex-1">
@@ -185,7 +190,7 @@ export function StudentDetails({
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <h3 className="text-gray-900">{material.subject}</h3>
+                            <h3 className="text-foreground font-semibold">{material.subject}</h3>
                             <Badge variant="outline" className={
                               material.type === 'material' 
                                 ? 'border-blue-300 text-blue-700' 
@@ -194,8 +199,8 @@ export function StudentDetails({
                               {material.type === 'material' ? 'Material' : 'Atividade'}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600 mb-2">{material.teacherName}</p>
-                          <p className="text-sm text-gray-500 flex items-center gap-1">
+                          <p className="text-sm text-muted-foreground mb-2">{material.teacherName}</p>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
                             <Calendar className="size-3" />
                             {formatDate(material.date)}
                           </p>
@@ -224,11 +229,11 @@ export function StudentDetails({
                       )}
                     </div>
 
-                    <p className="text-gray-700 mb-3">{material.description}</p>
+                    <p className="text-foreground mb-3">{material.description}</p>
 
                     {material.files && material.files.length > 0 && (
                       <div className="mb-3">
-                        <p className="text-sm text-gray-600 mb-2">Arquivos:</p>
+                          <p className="text-sm text-muted-foreground mb-2">Arquivos:</p>
                         <div className="space-y-2">
                           {material.files.map((file, index) => (
                             <div

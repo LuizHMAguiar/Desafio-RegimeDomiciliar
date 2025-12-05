@@ -57,6 +57,11 @@ export function CoordinatorDashboard({
     setEditingStudent(null);
   };
 
+  const handleOpenAddStudent = () => {
+    setEditingStudent(null);
+    setIsFormOpen(true);
+  };
+
   const handleDeleteStudent = (id: string) => {
     onDeleteStudent(id);
     if (selectedStudent?.id === id) {
@@ -76,27 +81,17 @@ export function CoordinatorDashboard({
               Gerencie estudantes que estão estudando remotamente por mais de 15 dias
             </p>
           </div>
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={() => setEditingStudent(null)}>
-                <Plus className="size-4 mr-2" />
-                Registrar Estudante
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingStudent ? 'Editar Estudante' : 'Registrar Novo Estudante'}
-                </DialogTitle>
-              </DialogHeader>
-              <StudentForm
-                student={editingStudent}
-                userId={user.id}
-                onSubmit={editingStudent ? handleUpdateStudent : handleAddStudent}
-                onCancel={handleCloseForm}
-              />
-            </DialogContent>
-          </Dialog>
+          <div>
+            <Button
+              onClick={handleOpenAddStudent}
+              className="inline-flex shadow-sm rounded-lg"
+              title="Registrar novo estudante"
+              aria-label="Registrar novo estudante"
+            >
+              <Plus className="size-4 mr-2" />
+              Registrar Estudante
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -119,7 +114,7 @@ export function CoordinatorDashboard({
                 userRole="coordinator"
               />
             ) : (
-              <div className="internal-panel p-12 text-center">
+              <div className="internal-panel p-10 text-center">
                 <p className="text-gray-600">
                   Selecione um estudante para ver os detalhes e materiais
                 </p>
@@ -128,6 +123,32 @@ export function CoordinatorDashboard({
           </div>
         </div>
       </div>
+
+      {/* Floating action button for registering a student (bottom-right) */}
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogTrigger asChild>
+          <div className="fixed bottom-6 right-6 z-50">
+            <Button aria-label="Registrar Estudante" onClick={() => { setEditingStudent(null); setIsFormOpen(true); }} className="fab rounded-full flex items-center gap-2">
+              <Plus className="size-4" />
+              <span className="hidden sm:inline">Registrar Estudante</span>
+            </Button>
+          </div>
+        </DialogTrigger>
+
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingStudent ? 'Editar Estudante' : 'Registrar Novo Estudante'}
+            </DialogTitle>
+          </DialogHeader>
+          <StudentForm
+            student={editingStudent}
+            userId={user.id}
+            onSubmit={editingStudent ? handleUpdateStudent : handleAddStudent}
+            onCancel={handleCloseForm}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

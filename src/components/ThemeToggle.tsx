@@ -30,8 +30,9 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      className="theme-toggle fixed top-4 right-4 z-50 rounded-full bg-white border-gray-300 text-gray-800 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-yellow-400 dark:hover:bg-gray-700"
+      className="theme-toggle rounded-full"
       title={isDark ? 'Modo claro' : 'Modo escuro'}
+      aria-label={isDark ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
     >
       {isDark ? (
         <Sun className="size-5" />

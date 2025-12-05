@@ -4,7 +4,8 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
-import { GraduationCap, AlertCircle, Users, BookOpen } from 'lucide-react';
+import { AlertCircle, Users, BookOpen } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 
 interface LoginProps {
   onLogin: (email: string, password: string) => void;
@@ -48,19 +49,25 @@ export function Login({ onLogin }: LoginProps) {
     }
   };
 
-  // Classe dinâmica do botão de login (cor dependendo do perfil selecionado)
-  const loginBtnBase = 'w-full text-white font-semibold py-2 rounded-lg shadow-sm transition-colors duration-200';
-  const loginBtnColor = selectedRole
-    ? '!bg-gray-800 hover:!bg-gray-900'
-    : '!bg-gray-600 hover:!bg-gray-700';
+  // Usaremos o variant "secondary" do Button (tema-aware) e garantimos largura/contraste
+  // para que o botão seja sempre claramente um botão, mesmo em backgrounds claros.
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen relative flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1 text-center">
+        <CardHeader className="relative space-y-1 text-center">
+          {/* Theme toggle inside card header so it doesn't overlap the submit button */}
+          <div className="absolute right-3 top-3">
+            <ThemeToggle />
+          </div>
           <div className="flex justify-center mb-4">
             <div className="bg-blue-600 p-3 rounded-full">
-              <GraduationCap className="size-8 text-white" />
+              {/* Nova logo SVG fornecida pelo usuário */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-8 text-white" aria-hidden="true">
+                <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path>
+                <path d="M22 10v6"></path>
+                <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+              </svg>
             </div>
           </div>
           <CardTitle>Sistema de Regime Domiciliar</CardTitle>
@@ -103,7 +110,7 @@ export function Login({ onLogin }: LoginProps) {
               />
             </div>
 
-            <Button type="submit" className={`${loginBtnBase} ${loginBtnColor}`} disabled={loading}>
+            <Button type="submit" className="w-full font-semibold py-2 rounded-lg shadow-md transition transform-gpu hover:-translate-y-0.5" disabled={loading}>
               {loading ? 'Entrando...' : 'Entrar'}
             </Button>
 
@@ -111,32 +118,34 @@ export function Login({ onLogin }: LoginProps) {
             <div className="mt-4">
               <p className="text-xs text-gray-500 mb-2">Entrar como</p>
               <div className="grid grid-cols-2 gap-2">
-                <button
+                <Button
                   type="button"
+                  variant={selectedRole === 'coordinator' ? undefined : 'outline'}
                   onClick={() => selectRole('coordinator')}
-                  className={`flex items-center justify-center gap-2 py-2 rounded-md border transition-colors duration-150 ${selectedRole === 'coordinator' ? 'bg-gray-300 border-gray-500' : 'bg-gray-100 border-gray-300 hover:border-gray-400'}`}
+                  className={`flex items-center justify-center gap-2 py-2 rounded-md transition-colors duration-150 ${selectedRole === 'coordinator' ? 'bg-background/60 border-border' : ''}`}
                 >
-                  <Users className={`${selectedRole === 'coordinator' ? 'text-gray-700' : 'text-gray-500'}`} />
-                  <span className="text-sm font-medium text-gray-700">Coordenador</span>
-                </button>
+                  <Users className={`${selectedRole === 'coordinator' ? 'text-foreground' : 'text-muted-foreground'}`} />
+                  <span className={`text-sm font-medium ${selectedRole === 'coordinator' ? 'text-foreground' : 'text-muted-foreground'}`}>Coordenador</span>
+                </Button>
 
-                <button
+                <Button
                   type="button"
+                  variant={selectedRole === 'teacher' ? undefined : 'outline'}
                   onClick={() => selectRole('teacher')}
-                  className={`flex items-center justify-center gap-2 py-2 rounded-md border transition-colors duration-150 ${selectedRole === 'teacher' ? 'bg-gray-300 border-gray-500' : 'bg-gray-100 border-gray-300 hover:border-gray-400'}`}
+                  className={`flex items-center justify-center gap-2 py-2 rounded-md transition-colors duration-150 ${selectedRole === 'teacher' ? 'bg-background/60 border-border' : ''}`}
                 >
-                  <BookOpen className={`${selectedRole === 'teacher' ? 'text-gray-700' : 'text-gray-500'}`} />
-                  <span className="text-sm font-medium text-gray-700">Professor</span>
-                </button>
+                  <BookOpen className={`${selectedRole === 'teacher' ? 'text-foreground' : 'text-muted-foreground'}`} />
+                  <span className={`text-sm font-medium ${selectedRole === 'teacher' ? 'text-foreground' : 'text-muted-foreground'}`}>Professor</span>
+                </Button>
               </div>
               {selectedRole && (
                 <p className="mt-2 text-xs text-gray-600">Perfil selecionado: <span className="font-semibold">{selectedRole === 'coordinator' ? 'Coordenador' : 'Professor'}</span></p>
               )}
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-900 mb-2">Credenciais de teste:</p>
-              <div className="space-y-1 text-xs text-blue-700">
+            <div className="mt-6 p-4 bg-accent rounded-lg border border-border">
+              <p className="text-sm text-muted-foreground mb-2">Credenciais de teste:</p>
+              <div className="space-y-1 text-xs text-muted-foreground">
                 <p><strong>Coordenador:</strong> coordenador@escola.com / coord123</p>
                 <p><strong>Professor:</strong> professor@escola.com / prof123</p>
               </div>

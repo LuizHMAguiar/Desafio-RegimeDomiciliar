@@ -62,10 +62,10 @@ export function StudentReport({ student, materials }: StudentReportProps) {
         {/* Informações do Estudante */}
         <div className="mb-6">
           <h2 className="mb-3">Dados do Estudante</h2>
-          <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded">
+            <div className="grid grid-cols-2 gap-4 bg-background p-4 rounded">
             <div>
               <p className="text-sm text-gray-600">Nome:</p>
-              <p>{student.name}</p>
+              <p className="font-semibold text-foreground">{student.name}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Curso:</p>

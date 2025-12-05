@@ -31,6 +31,33 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.625rem;
+  /* Design tokens (spacing, shadows, radii, typography) */
+  --space-0: 4px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+
+  --shadow-sm: 0 6px 14px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 12px 30px rgba(16, 24, 40, 0.08);
+  --shadow-lg: 0 24px 48px rgba(16, 24, 40, 0.12);
+  --shadow-fab: 0 10px 30px rgba(16, 24, 40, 0.12);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 32px;
+
+  --card-padding: var(--space-3);
+  --control-gap: var(--space-2);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: #030213;
@@ -124,8 +151,31 @@
     @apply border-border outline-ring/50;
   }
 
+  html {
+    background: 
+      linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    min-height: 100vh;
+  }
+
+  .dark html {
+    background: 
+      linear-gradient(135deg, #0369a1 0%, #7c3aed 50%, #be185d 100%);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background: transparent;
+  }
+}
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+  50% {
+    background-position: 50% 50%, 50% 50%, 100% 0%;
   }
 }
 
@@ -186,6 +236,15 @@
 
 html {
   font-size: var(--font-size);
+  /* make sure the root fills viewport so background covers entire page */
+  height: 100%;
+}
+
+/* Ensure body and #root fill the viewport so bg-var applies to whole screen */
+body, #root {
+  min-height: 100vh;
+  height: 100%;
+  position: relative;
 }
 
 /* Animações e Efeitos Visuais */
@@ -209,6 +268,8 @@ html {
     transform: translateY(-20px);
   }
 }
+
+
 
 @keyframes glow {
   0%, 100% {
@@ -306,20 +367,55 @@ input:focus {
 
 /* Estilos do background interno (aplicado apenas em InternalLayout) */
 .internal-bg {
-  /* camadas: gradiente escuro + suaves bolhas na paleta indigo/azul */
-  background-image: radial-gradient(circle at 10% 20%, rgba(79,70,229,0.12) 0%, rgba(79,70,229,0.02) 18%), radial-gradient(circle at 88% 78%, rgba(99,102,241,0.06) 0%, rgba(99,102,241,0.0) 28%), linear-gradient(180deg, #0b1226 0%, #071033 100%);
+  /* Light-mode internal background: soft/bright gradients and subtle bubbles */
+  background-image: radial-gradient(circle at 10% 20%, rgba(99,102,241,0.06) 0%, rgba(99,102,241,0.00) 18%), radial-gradient(circle at 88% 78%, rgba(79,70,229,0.04) 0%, rgba(79,70,229,0.00) 28%), linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(247,249,255,1) 100%);
+  background-size: cover;
+}
+
+/* Dark-mode variant: keep the more dramatic indigo/blue night-style */
+.dark .internal-bg {
+  background-image: radial-gradient(circle at 10% 20%, rgba(79,70,229,0.12) 0%, rgba(79,70,229,0.02) 18%), radial-gradient(circle at 88% 78%, rgba(99,102,241,0.06) 0%, rgba(99,102,241,0.00) 28%), linear-gradient(180deg, #0b1226 0%, #071033 100%);
   background-size: cover;
 }
 
 /* Painéis/Placeholders internos com efeito glass para contraste */
 .internal-panel {
-  /* painel com leve tom frio para contraste sobre background escuro */
-  background: rgba(247,250,255,0.90);
-  backdrop-filter: blur(8px) saturate(130%);
-  -webkit-backdrop-filter: blur(8px) saturate(130%);
-  border: 1px solid rgba(99,102,241,0.10);
-  box-shadow: 0 10px 40px rgba(6,8,32,0.42);
-  border-radius: 12px;
+  /* Panels adapt to theme via CSS variables */
+  background: color-mix(in srgb, var(--color-card) 95%, transparent);
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  box-shadow: 0 10px 40px color-mix(in srgb, var(--color-card) 10%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--card-padding);
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card defaults for consistent tone */
+.card, [role="card"] {
+  border-radius: var(--radius-md);
+  padding: var(--card-padding);
+  background: var(--color-card);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+}
+
+/* Floating action style */
+.fab {
+  border-radius: 9999px;
+  box-shadow: var(--shadow-fab);
+  padding: 0.6rem 1rem;
+}
+
+/* accessible focus-visible */
+*:focus {
+  outline: none;
+}
+
+*:focus-visible {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-ring) 12%, transparent), 0 6px 18px rgba(16,24,40,0.06);
+  border-radius: var(--radius-sm);
 }
 
 /* Overlay de textura sutil (opcional) */
