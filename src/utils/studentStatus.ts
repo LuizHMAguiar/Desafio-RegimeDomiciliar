@@ -36,15 +36,26 @@ export function getStudentStatus(student: Student, now: Date = new Date()): Stud
 
 /**
  * Ordena estudantes conforme regras:
- * 1) date final mais próxima (endDate asc)
- * 2) último registro mais recente (ultimoRegistroData ou registeredAt desc)
- * 3) curso (asc)
- * 4) turma (asc)
+ * 1) Status: ativos no topo, depois encerrando, depois encerrados
+ * 2) date final mais próxima (endDate asc)
+ * 3) último registro mais recente (ultimoRegistroData ou registeredAt desc)
+ * 4) curso (asc)
+ * 5) turma (asc)
  *
  * Retorna uma nova array (não muta a original).
  */
 export function sortStudents(students: Student[]): Student[] {
+  const statusOrder = { 'ativo': 0, 'encerrando': 1, 'encerrado': 2 };
+
   return [...students].sort((a, b) => {
+    // Primeiro, ordenar por status (ativos no topo)
+    const aStatus = getStudentStatus(a);
+    const bStatus = getStudentStatus(b);
+    const statusComparison = (statusOrder[aStatus] ?? 3) - (statusOrder[bStatus] ?? 3);
+
+    if (statusComparison !== 0) return statusComparison;
+
+    // Se mesmo status, ordenar por data final mais próxima
     const aEnd = a.endDate ? new Date(a.endDate).getTime() : Number.POSITIVE_INFINITY;
     const bEnd = b.endDate ? new Date(b.endDate).getTime() : Number.POSITIVE_INFINITY;
 
