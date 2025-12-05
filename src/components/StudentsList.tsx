@@ -3,7 +3,9 @@ import type { Student } from '../types'; // ✅ certo
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+// Badge import removed as it was not used
+import StatusBadge from './ui/status-badge';
+import { getStudentStatus, sortStudents } from '../utils/studentStatus';
 import { Search, Calendar, Edit, Trash2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import {
@@ -24,6 +26,11 @@ interface StudentsListProps {
   onEditStudent?: (student: Student) => void;
   onDeleteStudent?: (id: string) => void;
   userRole: 'coordinator' | 'teacher';
+  /**
+   * Quando verdadeiro, o sistema NÃO aplicará a ordenação automática
+   * (ex.: quando o usuário aplicou uma ordenação/filtragem manual).
+   */
+  manualSortApplied?: boolean;
 }
 
 export function StudentsList({
@@ -33,6 +40,7 @@ export function StudentsList({
   onEditStudent,
   onDeleteStudent,
   userRole,
+  manualSortApplied = false,
 }: StudentsListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [courseFilter, setCourseFilter] = useState('all');
@@ -49,16 +57,15 @@ export function StudentsList({
     return matchesSearch && matchesCourse && matchesClass;
   });
 
+  // Ordenação automática (padrão) — pode ser desativada por `manualSortApplied`.
+  const autoSorted = sortStudents(filteredStudents);
+  const finalStudents = manualSortApplied ? filteredStudents : autoSorted;
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('pt-BR');
   };
 
-  const isActive = (student: Student) => {
-    const today = new Date();
-    const endDate = new Date(student.endDate);
-    return endDate >= today;
-  };
 
   const handleDeleteClick = (e: React.MouseEvent, student: Student) => {
     e.stopPropagation();
@@ -76,7 +83,7 @@ export function StudentsList({
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Estudantes ({filteredStudents.length})</CardTitle>
+          <CardTitle>Estudantes ({finalStudents.length})</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="relative">
@@ -116,19 +123,19 @@ export function StudentsList({
           </div>
 
           <div className="space-y-2 max-h-[600px] overflow-y-auto">
-            {filteredStudents.length === 0 ? (
+            {finalStudents.length === 0 ? (
               <p className="text-center text-gray-500 py-8">
                 Nenhum estudante encontrado
               </p>
             ) : (
-              filteredStudents.map(student => (
+              finalStudents.map(student => (
                 <div
                   key={student.id}
                   onClick={() => onSelectStudent(student)}
-                  className={`p-4 rounded-lg border cursor-pointer transition-all ${
+                  className={`p-4 rounded-lg cursor-pointer transition-all internal-panel border ${
                     selectedStudent?.id === student.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                      ? 'ring-2 ring-blue-400 shadow-lg'
+                      : 'hover:shadow-md'
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
@@ -139,11 +146,7 @@ export function StudentsList({
                         <p className="text-sm text-gray-600">{student.class}</p>
                       </div>
                     </div>
-                    {isActive(student) ? (
-                      <Badge className="bg-green-100 text-green-800">Ativo</Badge>
-                    ) : (
-                      <Badge className="bg-gray-100 text-gray-800">Encerrado</Badge>
-                    )}
+                    <StatusBadge status={getStudentStatus(student)} />
                   </div>
                   
                   <div className="flex items-center gap-1 text-xs text-gray-500 mb-3">

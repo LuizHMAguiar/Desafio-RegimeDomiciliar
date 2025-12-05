@@ -65,7 +65,7 @@ export function CoordinatorDashboard({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-transparent">
       <Header user={user} onLogout={onLogout} />
 
       <div className="max-w-7xl mx-auto p-6">
@@ -119,8 +119,8 @@ export function CoordinatorDashboard({
                 userRole="coordinator"
               />
             ) : (
-              <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-                <p className="text-gray-500">
+              <div className="internal-panel p-12 text-center">
+                <p className="text-gray-600">
                   Selecione um estudante para ver os detalhes e materiais
                 </p>
               </div>

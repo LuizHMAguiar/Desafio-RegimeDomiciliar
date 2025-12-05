@@ -187,3 +187,146 @@
 html {
   font-size: var(--font-size);
 }
+
+/* Animações e Efeitos Visuais */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body {
+  animation: fade-in 0.5s ease-in-out;
+}
+
+/* Classes para animações */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.5s ease-out;
+}
+
+/* Botões melhorados */
+button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+button:hover:before {
+  left: 100%;
+}
+
+/* Inputs melhorados */
+input {
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
+}
+
+/* Cards com efeito */
+.card, [role="card"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover, [role="card"]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos do background interno (aplicado apenas em InternalLayout) */
+.internal-bg {
+  /* camadas: gradiente escuro + suaves bolhas na paleta indigo/azul */
+  background-image: radial-gradient(circle at 10% 20%, rgba(79,70,229,0.12) 0%, rgba(79,70,229,0.02) 18%), radial-gradient(circle at 88% 78%, rgba(99,102,241,0.06) 0%, rgba(99,102,241,0.0) 28%), linear-gradient(180deg, #0b1226 0%, #071033 100%);
+  background-size: cover;
+}
+
+/* Painéis/Placeholders internos com efeito glass para contraste */
+.internal-panel {
+  /* painel com leve tom frio para contraste sobre background escuro */
+  background: rgba(247,250,255,0.90);
+  backdrop-filter: blur(8px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(130%);
+  border: 1px solid rgba(99,102,241,0.10);
+  box-shadow: 0 10px 40px rgba(6,8,32,0.42);
+  border-radius: 12px;
+}
+
+/* Overlay de textura sutil (opcional) */
+.internal-texture {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 50%);
+  mix-blend-mode: overlay;
+}

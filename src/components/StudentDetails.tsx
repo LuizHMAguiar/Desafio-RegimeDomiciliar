@@ -168,7 +168,7 @@ export function StudentDetails({
                 {filteredMaterials.map(material => (
                   <div
                     key={material.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+                    className="internal-panel rounded-lg p-4 transition-shadow"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-start gap-3 flex-1">

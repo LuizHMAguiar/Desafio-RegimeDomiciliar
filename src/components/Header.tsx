@@ -2,6 +2,7 @@ import type { User } from '../types';
 import { Button } from './ui/button';
 import { GraduationCap, LogOut, User as UserIcon } from 'lucide-react';
 import { Badge } from './ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
   user: User;
@@ -9,8 +10,13 @@ interface HeaderProps {
 }
 
 export function Header({ user, onLogout }: HeaderProps) {
+  const navigate = useNavigate();
   const roleLabel = user.role === 'coordinator' ? 'Coordenador' : 'Professor';
   const roleColor = user.role === 'coordinator' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800';
+
+  const handleProfileClick = () => {
+    navigate(user.role === 'coordinator' ? '/perfis' : '/perfil');
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
@@ -34,9 +40,13 @@ export function Header({ user, onLogout }: HeaderProps) {
                   {roleLabel}
                 </Badge>
               </div>
-              <div className="bg-gray-100 p-2 rounded-full">
+              <button
+                onClick={handleProfileClick}
+                className="bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition-colors cursor-pointer"
+                title="Abrir perfil"
+              >
                 <UserIcon className="size-5 text-gray-600" />
-              </div>
+              </button>
             </div>
 
             <Button variant="outline" onClick={onLogout}>
