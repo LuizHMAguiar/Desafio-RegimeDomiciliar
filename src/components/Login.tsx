@@ -141,15 +141,7 @@ export function Login({ onLogin }: LoginProps) {
               {selectedRole && (
                 <p className="mt-2 text-xs text-gray-600">Perfil selecionado: <span className="font-semibold">{selectedRole === 'coordinator' ? 'Coordenador' : 'Professor'}</span></p>
               )}
-            </div>
-
-            <div className="mt-6 p-4 bg-accent rounded-lg border border-border">
-              <p className="text-sm text-muted-foreground mb-2">Credenciais de teste:</p>
-              <div className="space-y-1 text-xs text-muted-foreground">
-                <p><strong>Coordenador:</strong> coordenador@escola.com / coord123</p>
-                <p><strong>Professor:</strong> professor@escola.com / prof123</p>
-              </div>
-            </div>
+            </div>  
           </form>
         </CardContent>
       </Card>
