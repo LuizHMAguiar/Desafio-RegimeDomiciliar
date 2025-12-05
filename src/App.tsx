@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Login } from './components/Login';
 import { CoordinatorDashboard } from './components/CoordinatorDashboard';
 import { TeacherDashboard } from './components/TeacherDashboard';
@@ -13,120 +14,40 @@ import { toast } from 'sonner';
 import { type User, type Student, type Material } from './types';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
+const API_BASE = 'https://regimedomiciliar-api.onrender.com';
+
 function App() {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const setGlobalUser = useAppStore((s: any) => s.setUser);
   const [students, setStudents] = useState<Student[]>([]);
   const [materials, setMaterials] = useState<Material[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Inicializar com dados mock
-    const mockStudents: Student[] = [
-      {
-        id: '1',
-        name: 'Ana Silva Santos',
-        course: 'Engenharia de Software',
-        class: '3º Semestre',
-        startDate: '2025-11-01',
-        endDate: '2025-12-15',
-        registeredBy: 'coord1',
-        registeredAt: '2025-10-28',
-      },
-      {
-        id: '2',
-        name: 'Carlos Eduardo Lima',
-        course: 'Administração',
-        class: '2º Semestre',
-        startDate: '2025-11-10',
-        endDate: '2025-11-30',
-        registeredBy: 'coord1',
-        registeredAt: '2025-11-05',
-      },
-      {
-        id: '3',
-        name: 'Maria Oliveira Costa',
-        course: 'Engenharia de Software',
-        class: '1º Semestre',
-        startDate: '2025-11-15',
-        endDate: '2026-01-10',
-        registeredBy: 'coord1',
-        registeredAt: '2025-11-10',
-      },
-    ];
+    // Carregar dados da API
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const [studentsRes, materialsRes] = await Promise.all([
+          axios.get(`${API_BASE}/students`),
+          axios.get(`${API_BASE}/materials`),
+        ]);
+        setStudents(studentsRes.data);
+        setMaterials(materialsRes.data);
+      } catch (error) {
+        console.error('Erro ao carregar dados da API:', error);
+        toast.error('Erro ao carregar dados. Alguns recursos podem não estar disponíveis.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const mockMaterials: Material[] = [
-      {
-        id: '1',
-        studentId: '1',
-        teacherName: 'Prof. João Silva',
-        teacherId: 'teacher1',
-        subject: 'Programação Orientada a Objetos',
-        date: '2025-11-05',
-        type: 'material',
-        description: 'Material sobre herança e polimorfismo. Inclui slides e exemplos práticos em Java.',
-        files: [{ name: 'heranca-polimorfismo.pdf', url: '#' }],
-        links: ['https://nead.exemplo.com/poo/modulo3'],
-      },
-      {
-        id: '2',
-        studentId: '1',
-        teacherName: 'Prof. João Silva',
-        teacherId: 'teacher1',
-        subject: 'Programação Orientada a Objetos',
-        date: '2025-11-08',
-        type: 'activity',
-        description: 'Atividade prática: implementar um sistema de gerenciamento de biblioteca usando os conceitos de POO.',
-        links: ['https://nead.exemplo.com/poo/atividade-biblioteca'],
-      },
-      {
-        id: '3',
-        studentId: '1',
-        teacherName: 'Profa. Maria Santos',
-        teacherId: 'teacher2',
-        subject: 'Banco de Dados',
-        date: '2025-11-12',
-        type: 'material',
-        description: 'Normalização de banco de dados - Formas Normais 1FN, 2FN e 3FN com exemplos práticos.',
-        files: [{ name: 'normalizacao.pdf', url: '#' }],
-        links: ['https://nead.exemplo.com/bd/normalizacao'],
-      },
-    ];
-
-    setStudents(mockStudents);
-    setMaterials(mockMaterials);
+    loadData();
   }, []);
 
   const handleLogin = (email: string, password: string) => {
-    // Credenciais padrão: coordenador
-    if (email === 'coordenador@escola.com' && password === 'coord123') {
-      const newUser = {
-        id: 'coord1',
-        name: 'Maria Coordenadora',
-        email: email,
-        role: 'coordinator' as const,
-      };
-      setUser(newUser);
-      setGlobalUser(newUser as any);
-      navigate('/coordinator');
-      return;
-    }
-
-    // Credenciais padrão: professor
-    if (email === 'professor@escola.com' && password === 'prof123') {
-      const newUser = {
-        id: 'teacher1',
-        name: 'Prof. João Silva',
-        email: email,
-        role: 'teacher' as const,
-      };
-      setUser(newUser);
-      setGlobalUser(newUser as any);
-      navigate('/teacher');
-      return;
-    }
-
-    // Verificar perfis cadastrados
+    // Verificar perfis cadastrados na API
     validateProfile(email, password).then((profile) => {
       if (profile) {
         const newUser: User = {
@@ -158,44 +79,74 @@ function App() {
     navigate('/login', { replace: true });
   };
 
-  const handleAddStudent = (student: Omit<Student, 'id' | 'registeredAt'>) => {
-    const newStudent: Student = {
-      ...student,
-      id: Date.now().toString(),
-      registeredAt: new Date().toISOString().split('T')[0],
-    };
-    setStudents([...students, newStudent]);
-    toast.success('Estudante registrado com sucesso!');
+  const handleAddStudent = async (student: Omit<Student, 'id' | 'registeredAt'>) => {
+    try {
+      const response = await axios.post(`${API_BASE}/students`, {
+        ...student,
+        registeredAt: new Date().toISOString(),
+      });
+      setStudents([...students, response.data]);
+      toast.success('Estudante registrado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao adicionar estudante:', error);
+      toast.error('Erro ao registrar estudante');
+    }
   };
 
-  const handleUpdateStudent = (id: string, updatedStudent: Partial<Student>) => {
-    setStudents(students.map(s => s.id === id ? { ...s, ...updatedStudent } : s));
-    toast.success('Dados do estudante atualizados!');
+  const handleUpdateStudent = async (id: string | number, updatedStudent: Partial<Student>) => {
+    try {
+      const response = await axios.patch(`${API_BASE}/students/${id}`, updatedStudent);
+      setStudents(students.map(s => s.id === id ? response.data : s));
+      toast.success('Dados do estudante atualizados!');
+    } catch (error) {
+      console.error('Erro ao atualizar estudante:', error);
+      toast.error('Erro ao atualizar estudante');
+    }
   };
 
-  const handleDeleteStudent = (id: string) => {
-    setStudents(students.filter(s => s.id !== id));
-    setMaterials(materials.filter(m => m.studentId !== id));
-    toast.success('Estudante removido com sucesso!');
+  const handleDeleteStudent = async (id: string | number) => {
+    try {
+      await axios.delete(`${API_BASE}/students/${id}`);
+      setStudents(students.filter(s => s.id !== id));
+      setMaterials(materials.filter(m => m.studentId !== id));
+      toast.success('Estudante removido com sucesso!');
+    } catch (error) {
+      console.error('Erro ao deletar estudante:', error);
+      toast.error('Erro ao remover estudante');
+    }
   };
 
-  const handleAddMaterial = (material: Omit<Material, 'id'>) => {
-    const newMaterial: Material = {
-      ...material,
-      id: Date.now().toString(),
-    };
-    setMaterials([...materials, newMaterial]);
-    toast.success(material.type === 'material' ? 'Material adicionado com sucesso!' : 'Atividade adicionada com sucesso!');
+  const handleAddMaterial = async (material: Omit<Material, 'id'>) => {
+    try {
+      const response = await axios.post(`${API_BASE}/materials`, material);
+      setMaterials([...materials, response.data]);
+      toast.success(material.type === 'material' ? 'Material adicionado com sucesso!' : 'Atividade adicionada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao adicionar material:', error);
+      toast.error('Erro ao adicionar registro');
+    }
   };
 
-  const handleUpdateMaterial = (id: string, updatedMaterial: Partial<Material>) => {
-    setMaterials(materials.map(m => m.id === id ? { ...m, ...updatedMaterial } : m));
-    toast.success('Registro atualizado com sucesso!');
+  const handleUpdateMaterial = async (id: string | number, updatedMaterial: Partial<Material>) => {
+    try {
+      const response = await axios.patch(`${API_BASE}/materials/${id}`, updatedMaterial);
+      setMaterials(materials.map(m => m.id === id ? response.data : m));
+      toast.success('Registro atualizado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar material:', error);
+      toast.error('Erro ao atualizar registro');
+    }
   };
 
-  const handleDeleteMaterial = (id: string) => {
-    setMaterials(materials.filter(m => m.id !== id));
-    toast.success('Registro removido com sucesso!');
+  const handleDeleteMaterial = async (id: string | number) => {
+    try {
+      await axios.delete(`${API_BASE}/materials/${id}`);
+      setMaterials(materials.filter(m => m.id !== id));
+      toast.success('Registro removido com sucesso!');
+    } catch (error) {
+      console.error('Erro ao deletar material:', error);
+      toast.error('Erro ao remover registro');
+    }
   };
 
   return (

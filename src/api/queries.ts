@@ -4,7 +4,7 @@ import type { Student } from '../types';
 import { sortStudents } from '../utils/studentStatus';
 
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'https://regimedomiciliar-api.onrender.com',
   headers: { 'Content-Type': 'application/json' },
 });
 

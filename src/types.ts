@@ -1,14 +1,14 @@
 export type UserRole = "coordinator" | "teacher";
 
 export interface User {
-  id: number;
+  id: number | string;
   name: string;
   email: string;
   role: UserRole;
 }
 
 export interface Student {
-  id: number;
+  id: number | string;
   name: string;
   course: string;
   class: string;
@@ -19,10 +19,10 @@ export interface Student {
 }
 
 export interface Material {
-  id: number;
-  studentId: number;
+  id: number | string;
+  studentId: number | string;
   teacherName: string;
-  teacherId: number;
+  teacherId: number | string;
   subject: string;
   date: string; 
   type: "material" | "activity";
