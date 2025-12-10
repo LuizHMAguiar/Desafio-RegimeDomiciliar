@@ -53,3 +53,55 @@ export function useAddMaterial() {
     },
   });
 }
+
+export function useMaterials(params?: Record<string, any>) {
+  const key = ['materials', params];
+  return useQuery({
+    queryKey: key,
+    queryFn: async () => {
+      const res = await api.get('/materials', { params });
+      return res.data;
+    },
+    ...defaultQueryOptions,
+  });
+}
+
+export function useMaterial(id?: string | null) {
+  return useQuery({
+    queryKey: ['material', id],
+    queryFn: async () => {
+      if (!id) throw new Error('No id');
+      const res = await api.get(`/materials/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+}
+
+export function useUpdateMaterial() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, payload }: { id: string | number; payload: any }) => {
+      const res = await api.patch(`/materials/${id}`, payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['materials'] });
+      qc.invalidateQueries({ queryKey: ['students'] });
+    },
+  });
+}
+
+export function useDeleteMaterial() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string | number) => {
+      const res = await api.delete(`/materials/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['materials'] });
+      qc.invalidateQueries({ queryKey: ['students'] });
+    },
+  });
+}

@@ -12,6 +12,8 @@ import { validateProfile } from './api/profiles';
 import { Toaster } from './components/ui/sonner';
 import { toast } from 'sonner';
 import { type User, type Student, type Material } from './types';
+import { useMaterials, useAddMaterial, useUpdateMaterial, useDeleteMaterial } from './api/queries';
+import { useQueryClient } from '@tanstack/react-query';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
 const API_BASE = 'https://regimedomiciliar-api.onrender.com';
@@ -21,7 +23,11 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const setGlobalUser = useAppStore((s: any) => s.setUser);
   const [students, setStudents] = useState<Student[]>([]);
-  const [materials, setMaterials] = useState<Material[]>([]);
+  const qc = useQueryClient();
+  const { data: materials = [] } = useMaterials();
+  const addMaterialMutation = useAddMaterial();
+  const updateMaterialMutation = useUpdateMaterial();
+  const deleteMaterialMutation = useDeleteMaterial();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,12 +35,8 @@ function App() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [studentsRes, materialsRes] = await Promise.all([
-          axios.get(`${API_BASE}/students`),
-          axios.get(`${API_BASE}/materials`),
-        ]);
+        const studentsRes = await axios.get(`${API_BASE}/students`);
         setStudents(studentsRes.data);
-        setMaterials(materialsRes.data);
       } catch (error) {
         console.error('Erro ao carregar dados da API:', error);
         toast.error('Erro ao carregar dados. Alguns recursos podem não estar disponíveis.');
@@ -108,7 +110,7 @@ function App() {
     try {
       await axios.delete(`${API_BASE}/students/${id}`);
       setStudents(students.filter(s => s.id !== id));
-      setMaterials(materials.filter(m => m.studentId !== id));
+      qc.invalidateQueries({ queryKey: ['materials'] });
       toast.success('Estudante removido com sucesso!');
     } catch (error) {
       console.error('Erro ao deletar estudante:', error);
@@ -118,8 +120,7 @@ function App() {
 
   const handleAddMaterial = async (material: Omit<Material, 'id'>) => {
     try {
-      const response = await axios.post(`${API_BASE}/materials`, material);
-      setMaterials([...materials, response.data]);
+      await addMaterialMutation.mutateAsync(material);
       toast.success(material.type === 'material' ? 'Material adicionado com sucesso!' : 'Atividade adicionada com sucesso!');
     } catch (error) {
       console.error('Erro ao adicionar material:', error);
@@ -129,8 +130,7 @@ function App() {
 
   const handleUpdateMaterial = async (id: string | number, updatedMaterial: Partial<Material>) => {
     try {
-      const response = await axios.patch(`${API_BASE}/materials/${id}`, updatedMaterial);
-      setMaterials(materials.map(m => m.id === id ? response.data : m));
+      await updateMaterialMutation.mutateAsync({ id, payload: updatedMaterial });
       toast.success('Registro atualizado com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar material:', error);
@@ -140,8 +140,7 @@ function App() {
 
   const handleDeleteMaterial = async (id: string | number) => {
     try {
-      await axios.delete(`${API_BASE}/materials/${id}`);
-      setMaterials(materials.filter(m => m.id !== id));
+      await deleteMaterialMutation.mutateAsync(id);
       toast.success('Registro removido com sucesso!');
     } catch (error) {
       console.error('Erro ao deletar material:', error);
