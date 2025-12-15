@@ -114,7 +114,7 @@ export function Login({ onLogin }: LoginProps) {
               {loading ? 'Entrando...' : 'Entrar'}
             </Button>
 
-            {/* Seleção de perfil (abaixo do botão) */}
+            {/* Seleção de perfil (abaixo do botão) 
             <div className="mt-4">
               <p className="text-xs text-gray-500 mb-2">Entrar como</p>
               <div className="grid grid-cols-2 gap-2">
@@ -141,7 +141,7 @@ export function Login({ onLogin }: LoginProps) {
               {selectedRole && (
                 <p className="mt-2 text-xs text-gray-600">Perfil selecionado: <span className="font-semibold">{selectedRole === 'coordinator' ? 'Coordenador' : 'Professor'}</span></p>
               )}
-            </div>  
+            </div>  */}
           </form>
         </CardContent>
       </Card>
