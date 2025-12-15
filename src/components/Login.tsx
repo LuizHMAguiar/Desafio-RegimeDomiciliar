@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Alert, AlertDescription } from './ui/alert';
 import { AlertCircle, Users, BookOpen } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import Logo from '../assets/logo.jpg';
 
 interface LoginProps {
   onLogin: (email: string, password: string) => void;
@@ -61,14 +62,13 @@ export function Login({ onLogin }: LoginProps) {
             <ThemeToggle />
           </div>
           <div className="flex justify-center mb-4">
-            <div className="bg-blue-600 p-3 rounded-full">
-              {/* Nova logo SVG fornecida pelo usuário */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-8 text-white" aria-hidden="true">
-                <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path>
-                <path d="M22 10v6"></path>
-                <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
-              </svg>
-            </div>
+            {/* Logo de login: coloque o arquivo em `public/logo-login.png` */}
+            <img
+              src={Logo}
+              alt="Logo do Sistema"
+              className="w-24 h-24 object-contain rounded-full shadow-md bg-white p-2"
+              width="200px"
+            />
           </div>
           <CardTitle>Sistema de Regime Domiciliar</CardTitle>
           <CardDescription>
