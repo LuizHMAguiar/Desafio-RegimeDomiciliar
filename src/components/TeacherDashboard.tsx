@@ -14,8 +14,8 @@ interface TeacherDashboardProps {
   materials: Material[];
   onLogout: () => void;
   onAddMaterial: (material: Omit<Material, 'id'>) => void;
-  onUpdateMaterial: (id: string, material: Partial<Material>) => void;
-  onDeleteMaterial: (id: string) => void;
+  onUpdateMaterial: (id: number, material: Partial<Material>) => void;
+  onDeleteMaterial: (id: number) => void;
 }
 
 export function TeacherDashboard({

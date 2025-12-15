@@ -21,7 +21,7 @@ interface MaterialFormProps {
 
 export function MaterialForm({ material, student, students, user, onSubmit, onCancel }: MaterialFormProps) {
   const [formData, setFormData] = useState({
-    studentId: student?.id || '',
+    studentId: student?.id ,
     subject: '',
     type: 'material' as 'material' | 'activity',
     description: '',
@@ -167,7 +167,7 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
     const validLinks = formData.links.filter(link => link.trim() !== '');
 
     onSubmit({
-      studentId: formData.studentId,
+      studentId: formData.studentId || 0,
       teacherName: user.name,
       teacherId: user.id,
       subject: formData.subject,
@@ -197,13 +197,13 @@ export function MaterialForm({ material, student, students, user, onSubmit, onCa
 
       <div className="space-y-2">
         <Label htmlFor="student">Estudante *</Label>
-        <Select value={formData.studentId} onValueChange={(value) => handleChange('studentId', value)}>
+        <Select value={formData.studentId?.toString()} onValueChange={(value) => handleChange('studentId', value)}>
           <SelectTrigger id="student">
             <SelectValue placeholder="Selecione o estudante" />
           </SelectTrigger>
           <SelectContent>
             {students.map(s => (
-              <SelectItem key={s.id} value={s.id}>
+              <SelectItem key={s.id} value={s.id.toString()}>
                 {s.name} - {s.course} ({s.class})
               </SelectItem>
             ))}

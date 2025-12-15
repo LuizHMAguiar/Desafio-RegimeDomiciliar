@@ -28,20 +28,16 @@ function App() {
   const addMaterialMutation = useAddMaterial();
   const updateMaterialMutation = useUpdateMaterial();
   const deleteMaterialMutation = useDeleteMaterial();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Carregar dados da API
     const loadData = async () => {
       try {
-        setLoading(true);
         const studentsRes = await axios.get(`${API_BASE}/students`);
         setStudents(studentsRes.data);
       } catch (error) {
         console.error('Erro ao carregar dados da API:', error);
         toast.error('Erro ao carregar dados. Alguns recursos podem não estar disponíveis.');
-      } finally {
-        setLoading(false);
       }
     };
 

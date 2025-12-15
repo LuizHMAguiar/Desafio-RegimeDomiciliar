@@ -1,28 +1,28 @@
 export type UserRole = "coordinator" | "teacher";
 
 export interface User {
-  id: number | string;
+  id: number;
   name: string;
   email: string;
   role: UserRole;
 }
 
 export interface Student {
-  id: number | string;
+  id: number;
   name: string;
   course: string;
   class: string;
   startDate: string;
   endDate: string;
-  registeredBy: string;
+  registeredBy: number;
   registeredAt: string;
 }
 
 export interface Material {
-  id: number | string;
-  studentId: number | string;
+  id: number;
+  studentId: number ;
   teacherName: string;
-  teacherId: number | string;
+  teacherId: number;
   subject: string;
   date: string; 
   type: "material" | "activity";

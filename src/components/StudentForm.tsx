@@ -8,7 +8,7 @@ import { AlertCircle } from 'lucide-react';
 
 interface StudentFormProps {
   student?: Student | null;
-  userId: string;
+  userId: number;
   onSubmit: (student: Omit<Student, 'id' | 'registeredAt'>) => void;
   onCancel: () => void;
 }

@@ -23,9 +23,9 @@ interface StudentDetailsProps {
   student: Student;
   materials: Material[];
   userRole: 'coordinator' | 'teacher';
-  currentUserId?: string;
+  currentUserId?: number;
   onEditMaterial?: (material: Material) => void;
-  onDeleteMaterial?: (id: string) => void;
+  onDeleteMaterial?: (id: number) => void;
 }
 
 export function StudentDetails({

@@ -23,7 +23,7 @@ interface StudentsListProps {
   selectedStudent: Student | null;
   onSelectStudent: (student: Student) => void;
   onEditStudent?: (student: Student) => void;
-  onDeleteStudent?: (id: string) => void;
+  onDeleteStudent?: (id: number) => void;
   userRole: 'coordinator' | 'teacher';
   manualSortApplied?: boolean;
 }

@@ -14,8 +14,8 @@ interface CoordinatorDashboardProps {
   materials: Material[];
   onLogout: () => void;
   onAddStudent: (student: Omit<Student, 'id' | 'registeredAt'>) => void;
-  onUpdateStudent: (id: string, student: Partial<Student>) => void;
-  onDeleteStudent: (id: string) => void;
+  onUpdateStudent: (id: number, student: Partial<Student>) => void;
+  onDeleteStudent: (id: number) => void;
 }
 
 export function CoordinatorDashboard({
@@ -62,7 +62,7 @@ export function CoordinatorDashboard({
     setIsFormOpen(true);
   };
 
-  const handleDeleteStudent = (id: string) => {
+  const handleDeleteStudent = (id: number) => {
     onDeleteStudent(id);
     if (selectedStudent?.id === id) {
       setSelectedStudent(null);

@@ -4,7 +4,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Alert, AlertDescription } from './ui/alert';
-import { AlertCircle, Users, BookOpen } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 interface LoginProps {
@@ -14,7 +14,6 @@ interface LoginProps {
 export function Login({ onLogin }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedRole, setSelectedRole] = useState<'teacher' | 'coordinator' | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -34,18 +33,6 @@ export function Login({ onLogin }: LoginProps) {
       setError(err instanceof Error ? err.message : 'Erro ao fazer login');
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Preenche automaticamente credenciais de teste ao selecionar um perfil
-  const selectRole = (role: 'teacher' | 'coordinator') => {
-    setSelectedRole(role);
-    if (role === 'coordinator') {
-      setEmail('coordenador@escola.com');
-      setPassword('coord123');
-    } else {
-      setEmail('professor@escola.com');
-      setPassword('prof123');
     }
   };
 
