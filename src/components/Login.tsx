@@ -54,8 +54,11 @@ export function Login({ onLogin }: LoginProps) {
   // para que o botão seja sempre claramente um botão, mesmo em backgrounds claros.
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div
+      className="min-h-screen relative flex items-center justify-center login-bg p-4"
+      style={{ backgroundImage: `url('/login-bg.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <Card className="w-full max-w-md login-card" style={{ position: 'relative', zIndex: 10 }}>
         <CardHeader className="relative space-y-1 text-center">
           {/* Theme toggle inside card header so it doesn't overlap the submit button */}
           <div className="absolute right-3 top-3">
